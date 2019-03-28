@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html>
+<head>
+      <script src="script/jq-D.js"></script> 
+     <script src="script/jquery-ui.js"></script> 
+<style>
+    body {
+
+ background-image: url("flow.jpg");
+ background-color: #cccccc;
+ background-position: center; 
+ background-repeat: no-repeat; 
+ background-size: cover;  
+ background-attachment: fixed;
+ /* background: #efefef url(flow.jpg) repeat fixed top left;*/
+}
+    img {
+    position: absolute;    
+    top: 15px ;
+            
+    }    
+    #btn{
+    position: absolute;
+    top: 511px; /* easy to check */
+    height :100px ;   
+      }
+     .attemp{
+    position: relative;
+     left: 950px;
+     top: 500px;
+     width : 40px;
+     height : 50px ;
+
+     } 
+    #highscore
+    {
+   position: absolute;
+    top: 61px;
+    right: 120px;
+    width: 82px;
+    height: 99px;
+    }
+    #score{
+      position: absolute;
+    top: 55px;
+    right: 125px;
+    width: 64px;
+    height: 38px;
+    }
+    label
+    {
+    position: absolute ;
+    top: 67px;
+    right: 92px;
+    font-size: 30px;  
+    color: rgb(88, 44, 146);    
+    }
+    #progressbar
+{
+  width:550px;
+  margin:146px;
+  
+}
+#click
+{
+     width: 84px;
+    /* margin-left: 166px;
+    margin-top: 2px; */
+    top: 297px;
+    left: 367px
+}
+span
+{
+  margin-left: -185px;
+    margin-top: 227px;
+    /* margin-bottom: 493px; */
+    top: -142px;
+    left: 54px;
+    position: relative;
+    width: 69px;
+}
+#over{
+  position: absolute;
+    top: 57px;
+    left: 329px;
+    width: 500px
+}
+  
+</style>
+<link rel="icon" href="bird.png" type="image/png" sizes="30x30">
+</head>
+<body>
+<div>
+<img id="img0" src="egg1.png" style="left: 190px;width:40px;height:50;" >
+<img id="img1" src="egg2.png" style="left: 190px;width:40px;height:50;">
+<img id="img2" src="egg3.png" style="left: 190px;width:40px;height:50;">
+<img id="img3" src="egg4.png" style="left: 190px;width:40px;height:50;">
+<img id="img4" src="egg5.png" style="left: 190px;width:40px;height:50;">
+</div>
+<div>
+
+  <img class="attemp" id="try1" src="heart.png">
+  <img class="attemp" id="try2" src="heart.png">
+  <img class="attemp" id="try3" src="heart.png">
+
+</div>
+<img id="bouns" class="" style="left: 190px;width:40px;height:50;display: none" src="bouns.png">
+
+<label>0</label>
+<img id="highscore" src="highscore.png">
+<img id="score" src="score.png">
+
+<label style="top: 90px;">0</label>
+<img id="btn" src="box.png" style="left: 178px ;width : 120px" onclick="move()">
+
+<img id="over" src="gameover.png">
+
+<div id="p" >
+  <progress min="0" max="100"  value="0" id="progressbar"> </progress>
+  <span>Loading...</span>
+  <img id="click" onclick="progress()" src="play.png">
+           
+</div>
+
+
+<script>
+  
+ 
+ var mySound = new sound("ahmed.mp3");
+
+var A = 15 ;  
+ var ToP =[15,15,15,15,15]; 
+var topbouns ;
+var Interbouns ;
+var ahmed ;
+var score = 0 ;
+var i ;    
+var left ;
+var maxLeft = 650 ;
+var minLeft = 10 ;
+var attemp = 3 ;
+var speed = 15 ;  //5    
+  document.getElementsByTagName("img")[0].style.display = "None" ;
+  document.getElementsByTagName("img")[1].style.display = "None" ;
+  document.getElementsByTagName("img")[2].style.display = "None" ;
+  document.getElementsByTagName("img")[3].style.display = "None" ;
+  document.getElementsByTagName("img")[4].style.display = "None" ;
+  document.getElementById('btn').style.display='none';
+  document.getElementById('over').style.display='none';
+  for(var t = 0 ;t < 5 ; t++) {
+     left =Math.floor(Math.random()*(maxLeft-minLeft+1)+minLeft)
+     document.getElementById('img'+t).style.left =left+'px';
+     document.getElementsByTagName("img")[t].style.top = (-(ToP[t]+t*60))+"px";        
+     ToP[t]= parseInt(document.getElementsByTagName("img")[t].style.top);  
+  }
+function bouns(){
+document.getElementById('bouns').style.display="inline"
+document.getElementById('bouns').style.top="15px"
+topbouns=15;
+left =Math.floor(Math.random()*(maxLeft-minLeft+1)+minLeft)
+document.getElementById('bouns').style.top = '15px' ;
+document.getElementById('bouns').style.left =left+'px';
+
+Interbouns= setInterval(function(){
+  topbouns++;
+document.getElementById('bouns').style.top = topbouns+'px' ;
+if(document.getElementById('over').style.display=="inline"){
+         clearInterval(Interbouns) ;
+document.getElementById('bouns').style.display="none";
+}
+if(document.getElementById('bouns').style.top == 520+"px" && 
+    parseInt(document.getElementById('bouns').style.left) > parseInt(document.getElementById("btn").style.left )
+   && (parseInt(document.getElementById("btn").style.left ) + 100 ) >parseInt(document.getElementById('bouns').style.left ) )
+   {
+            score = score + 10 ; // make img display none
+        document.getElementById('bouns').style.display = "None"; 
+        if(score>localStorage.highScore)
+          localStorage.highScore=score
+       
+    document.getElementsByTagName("label")[1].innerHTML =  localStorage.highScore ;      
+   } 
+
+  else if(parseInt(document.getElementById('bouns').style.top) == 600 && document.getElementById('bouns').style.display=="inline"){
+    document.getElementById('bouns').style.display = "None";
+     clearInterval(Interbouns) ;  
+      }          
+                  
+          
+},speed)
+
+}
+function move(){
+
+     var myMusic = new sound("ahmed.mp3");
+        clearInterval(ahmed) ;
+         for(var t = 0 ;t < 5 ; t++) {
+    // document.getElementById('img'+t).style.top = '15px' ;
+     document.getElementsByTagName("img")[t].style.display = "inline" ;
+     if(window.localStorage.highScore)
+    document.getElementsByTagName("label")[1].innerHTML =  localStorage.highScore ;      
+     
+           }     
+       myMusic.play();        
+   ahmed = setInterval(StartGame, speed);
+        
+       }
+       var overlaps = (function () {
+    function getPositions( elem ) {
+        var pos, width, height;
+        pos = $(elem ).position();//box
+        width = $( elem ).width();
+        height = $( elem ).height();
+        return [ [ pos.left, pos.left + width ], [ pos.top, pos.top + height ] ];
+    }
+
+    function comparePositions( p1, p2 ) {
+        var r1, r2;
+        r1 = p1[0] < p2[0] ? p1 : p2;
+        r2 = p1[0] < p2[0] ? p2 : p1;
+        return r1[1] > r2[0] || r1[0] === r2[0];
+    }
+    
+    return function ( a , b ) { // a= box , b= img ;
+        var pos1 = getPositions( a ),
+            pos2 = getPositions( b );
+        return comparePositions( pos1[0], pos2[0] ) && comparePositions( pos1[1], pos2[1] );
+    };
+})();
+
+
+
+    function sound(src) {
+    this.sound = document.createElement("audio");
+    this.sound.src = src;
+    this.sound.setAttribute("preload", "auto");
+    this.sound.setAttribute("controls", "none");
+    this.sound.style.display = "none";
+    document.body.appendChild(this.sound);
+    this.play = function(){
+    this.sound.play();
+    }
+    this.stop = function(){
+    this.sound.pause();
+        }    
+    }
+ 
+
+
+function myFunction(e) {
+  var x = e.clientX;
+  var y = e.clientY;
+  if(x> 700){  x = 700;  }
+	if(x < 50){	x = 50 ;	}	   
+
+  document.getElementById("btn").style.left = (x-50) +"px"; //x-50
+
+}
+document.onkeydown = keyFunction; 
+
+function keyFunction(e){
+  var left =parseInt(document.getElementById("btn").style.left);
+  if(e.keyCode == 39){
+    left += 20;
+    if(left >= 700){
+      left = 700;
+    }
+    document.getElementById("btn").style.left = left + "px"; 
+  } 
+  else if(e.keyCode == 37){
+    left -=20;
+    if(left <= 1){
+      left = 1;
+    }
+    document.getElementById("btn").style.left = left + "px"; 
+  }
+}
+
+function progress() {
+  var progress = document.getElementById("progressbar");
+  var width = 1;
+  var id = setInterval(frame, 10);
+
+  function frame() {
+    if (width >= 100) {
+      clearInterval(id);
+    document.getElementById('p').outerHTML='';
+    document.getElementById('btn').style.display='inline' ;
+    } 
+      else {
+      width++;
+      progress.value = width
+    }
+  }
+}
+
+document.onmousemove = myFunction;
+  function StartGame(){ 
+       for(var key in ToP) { 
+             ToP[key]++;
+         }    
+     for(i = 0 ; i < 5 ; i++){ //loop end of the loop Game 
+           
+    if(parseInt(document.getElementById('img'+i).style.top)>= 600)
+    {  
+     left =Math.floor(Math.random()*(maxLeft-minLeft+1)+minLeft)
+     document.getElementById('img'+i).style.top = '15px' ;
+     document.getElementById('img'+i).style.left =left+'px';
+     document.getElementsByTagName('img')[i].style.display = "inline";    
+           ToP[i]=15;
+    } 
+          //increase Of Top() 
+      document.getElementsByTagName("img")[i].style.top = (ToP[i])+"px";        
+      document.getElementsByTagName("label")[0].innerHTML =  score ;      
+      if(!window.localStorage.highScore)
+      window.localStorage.setItem('highScore',0) ;
+
+         // Condition Of Score 
+  //   if(document.getElementsByTagName("img")[i].style.top == 520+"px" && 
+  //   parseInt(document.getElementsByTagName("img")[i].style.left) > parseInt(document.getElementById("btn").style.left )
+  //  && (parseInt(document.getElementById("btn").style.left ) + 100 ) >parseInt(document.getElementsByTagName("img")[i].style.left ) )
+  //  
+    if(overlaps("#btn", "#img"+i)) 
+      {
+                score++ ; // make img display none
+          document.getElementsByTagName('img')[i].style.display = "None";
+          if(score>20){
+            
+            speed = 5 ;
+            clearInterval(ahmed);
+            ahmed = setInterval(StartGame, speed);
+          }
+          else if(score>10){
+          speed=10;
+          if(score==11)
+          bouns();
+          document.body.style.backgroundImage = "url('FBE.jpg')";
+          clearInterval(ahmed);
+          ahmed = setInterval(StartGame, speed);
+          
+          }
+       if(score>localStorage.highScore)
+      localStorage.highScore=score
+       
+  document.getElementsByTagName("label")[1].innerHTML =  localStorage.highScore ;      
+   }        
+  else if(parseInt(document.getElementsByTagName('img')[i].style.top) == 590 && document.getElementsByTagName('img')[i].style.display=="inline"){
+   if(attemp > 0)
+  document.getElementById('try'+ attemp--).style.display="none";       
+   //document.getElementById('try'+ attemp--).outerHTML="" ;   // Hide photo attempt          
+   else {
+    //alert("Game Is over");
+   //  myMusic.stop();
+    clearInterval(ahmed);
+    document.getElementById('over').style.display='inline';
+    attemp=3;  speed=15;   score=0; ToP =[15,15,15,15,15];
+    for(var t = 0 ;t < 5 ; t++) {
+     left =Math.floor(Math.random()*(maxLeft-minLeft+1)+minLeft)
+     document.getElementById('img'+t).style.left =left+'px';
+     document.getElementsByTagName("img")[t].style.top = (ToP[t]+t*60)+"px";        
+     ToP[t]= parseInt(document.getElementsByTagName("img")[t].style.top); 
+  }
+  document.getElementById('try1').style.display="inline";       
+  document.getElementById('try2').style.display="inline";       
+  document.getElementById('try3').style.display="inline";       
+    //reset s
+   }
+      }          
+        }          
+          }
+         
+        
+  // function stop(){ clearInterval(ahmed) }     
+</script>
+</body>
+</html>
