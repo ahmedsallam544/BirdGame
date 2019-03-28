@@ -113,7 +113,7 @@ span
 <label style="top: 90px;">0</label>
 <img id="btn" src="box.png" style="left: 178px ;width : 120px" onclick="move()">
 
-<img id="over" src="gameover.png">
+<img id="over" onclick="move()" src="gameover.png">
 
 <div id="p" >
   <progress min="0" max="100"  value="0" id="progressbar"> </progress>
@@ -125,8 +125,6 @@ span
 
 <script>
   
- 
- var mySound = new sound("ahmed.mp3");
 
 var A = 15 ;  
  var ToP =[15,15,15,15,15]; 
@@ -192,6 +190,9 @@ if(document.getElementById('bouns').style.top == 520+"px" &&
 function move(){
 
      var myMusic = new sound("ahmed.mp3");
+     
+     var mySound = new sound("Tic.mp3");
+
         clearInterval(ahmed) ;
          for(var t = 0 ;t < 5 ; t++) {
     // document.getElementById('img'+t).style.top = '15px' ;
@@ -210,7 +211,7 @@ function move(){
         pos = $(elem ).position();//box
         width = $( elem ).width();
         height = $( elem ).height();
-        return [ [ pos.left, pos.left + width ], [ pos.top, pos.top + height ] ];
+        return [ [ pos.left, pos.left + width ], [ pos.top, pos.top + height -30 ] ];
     }
 
     function comparePositions( p1, p2 ) {
@@ -256,6 +257,17 @@ function myFunction(e) {
 
 }
 document.onkeydown = keyFunction; 
+document.ontouchmove = touchfunction ;
+function touchfunction(e) {
+  var x = e.clientX;
+  var y = e.clientY;
+  if(x> 700){  x = 700;  }
+	if(x < 50){	x = 50 ;	}	   
+
+  document.getElementById("btn").style.left = (x-50) +"px"; //x-50
+
+}
+
 
 function keyFunction(e){
   var left =parseInt(document.getElementById("btn").style.left);
@@ -350,6 +362,7 @@ document.onmousemove = myFunction;
    else {
     //alert("Game Is over");
    //  myMusic.stop();
+     //mySound.play();
     clearInterval(ahmed);
     document.getElementById('over').style.display='inline';
     attemp=3;  speed=15;   score=0; ToP =[15,15,15,15,15];
