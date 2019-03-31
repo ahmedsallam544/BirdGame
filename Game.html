@@ -138,6 +138,8 @@ var maxLeft = 650 ;
 var minLeft = 10 ;
 var attemp = 3 ;
 var speed = 15 ;  //5    
+var myMusic = new sound("ahmed.mp3");
+
   document.getElementsByTagName("img")[0].style.display = "None" ;
   document.getElementsByTagName("img")[1].style.display = "None" ;
   document.getElementsByTagName("img")[2].style.display = "None" ;
@@ -145,12 +147,7 @@ var speed = 15 ;  //5
   document.getElementsByTagName("img")[4].style.display = "None" ;
   document.getElementById('btn').style.display='none';
   document.getElementById('over').style.display='none';
-  for(var t = 0 ;t < 5 ; t++) {
-     left =Math.floor(Math.random()*(maxLeft-minLeft+1)+minLeft)
-     document.getElementById('img'+t).style.left =left+'px';
-     document.getElementsByTagName("img")[t].style.top = (-(ToP[t]+t*60))+"px";        
-     ToP[t]= parseInt(document.getElementsByTagName("img")[t].style.top);  
-  }
+
 function bouns(){
 document.getElementById('bouns').style.display="inline"
 document.getElementById('bouns').style.top="15px"
@@ -188,11 +185,15 @@ if(document.getElementById('bouns').style.top == 520+"px" &&
 
 }
 function move(){
+  for(var t = 0 ;t < 5 ; t++) {
+     left =Math.floor(Math.random()*(maxLeft-minLeft+1)+minLeft)
+     document.getElementById('img'+t).style.left =left+'px';
+     document.getElementsByTagName("img")[t].style.top = (-(ToP[t]+t*60))+"px";        
+     ToP[t]= parseInt(document.getElementsByTagName("img")[t].style.top);  
+  }
+  document.getElementById('over').style.display='none';
 
-     var myMusic = new sound("ahmed.mp3");
-     
-     var mySound = new sound("Tic.mp3");
-
+   
         clearInterval(ahmed) ;
          for(var t = 0 ;t < 5 ; t++) {
     // document.getElementById('img'+t).style.top = '15px' ;
@@ -257,13 +258,14 @@ function myFunction(e) {
 
 }
 document.onkeydown = keyFunction; 
-document.ontouchmove = touchfunction ;
+document.ontouchstart = touchfunction ;
+
 function touchfunction(e) {
   var x = e.clientX;
   var y = e.clientY;
   if(x> 700){  x = 700;  }
 	if(x < 50){	x = 50 ;	}	   
-
+  
   document.getElementById("btn").style.left = (x-50) +"px"; //x-50
 
 }
@@ -360,9 +362,9 @@ document.onmousemove = myFunction;
   document.getElementById('try'+ attemp--).style.display="none";       
    //document.getElementById('try'+ attemp--).outerHTML="" ;   // Hide photo attempt          
    else {
-    //alert("Game Is over");
-   //  myMusic.stop();
-     //mySound.play();
+     myMusic.stop();
+     var ticSound = new sound("Tic.mp3");
+     ticSound.play();
     clearInterval(ahmed);
     document.getElementById('over').style.display='inline';
     attemp=3;  speed=15;   score=0; ToP =[15,15,15,15,15];
@@ -375,7 +377,7 @@ document.onmousemove = myFunction;
   document.getElementById('try1').style.display="inline";       
   document.getElementById('try2').style.display="inline";       
   document.getElementById('try3').style.display="inline";       
-    //reset s
+  
    }
       }          
         }          
